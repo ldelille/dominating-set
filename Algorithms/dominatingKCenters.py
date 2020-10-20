@@ -1,47 +1,49 @@
 import sys, os, time
 import networkx as nx
+import sys, os, time
+import networkx as nx
+from networkx.utils import arbitrary_element
+
 
 #Given a graph G and a integer i, we find i centers that minimize the maximum distance of a node to one center 
 #Returns the i centers and the max distance
-def findKCenters(G, i, previousCenters):
+def findKCenters(G, k, shortestPaths):
     allNodes = set(G)
-    if len(previousCenters) == 0: 
-        randomCenter = allNodes.pop()
-        kCenters = {randomCenter}
-        i = i - 1
-    else: 
-        kCenters = previousCenters
-        i = i -len(previousCenters)
-    while i != 0: 
-        nodeDict ={}
-        for node in allNodes:
-            minDist = float("inf")
+    kCenters = set()
+    start_with = arbitrary_element(allNodes)
+    kCenters.add(start_with)
+    nodeDict = {}
+    for x in allNodes: 
+        nodeDict[x] = float("inf")
+    k = k - 1
+    nodeDict[start_with] = 0
+    while k != 0: 
+        for node in allNodes-kCenters:
             for center in kCenters:
-                minDist = min(minDist, nx.shortest_path_length(G, node,center))
-                nodeDict[node] = minDist
-        newCenter =  max(nodeDict, key = lambda i:nodeDict[i])
+                if nodeDict[node] > shortestPaths[node][center]: 
+                    nodeDict[node] = shortestPaths[node][center]
+        newCenter = max(nodeDict, key = lambda i:nodeDict[i])
+        nodeDict[newCenter] = 0
         kCenters.add(newCenter)
-        allNodes.remove(newCenter)
-        i = i - 1
-    finalDict = {}
-    for node in allNodes:
-        minDist = float("inf")
-        for center in kCenters:
-            minDist = min(minDist, nx.shortest_path_length(G, node, center))
-            finalDict[node] = minDist
-    return kCenters, max(finalDict.values())
+        k -=1
+    return kCenters, max(nodeDict.values())
+
 
 
 #for each graph, we calculate the min distance for i centers, if the min distance is equal to 1, we found a dominating set
 def dominant(g):
     n = len(g.nodes)
-    previousCenters = set()
+    shortestPaths = dict(nx.all_pairs_shortest_path_length(g))
     for i in range(1, n):
-        # print(previousCenters)
-        # print(findKCenters(g, i, previousCenters))
-        previousCenters, d = findKCenters(g, i, previousCenters)
-        if d == 1: 
-            return previousCenters
+        kCenters, d = findKCenters(g, i, shortestPaths)
+        if d == 1:
+            return kCenters
+
+
+
+
+
+
 
 
 
