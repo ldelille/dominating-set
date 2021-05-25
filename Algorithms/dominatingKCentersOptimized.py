@@ -31,7 +31,6 @@ def findKCentersColors(G, k, shortestPaths, startWith):
     nodeDict[startWith] = 0
     newCenter = startWith
     kCenters.add(newCenter)
-    # print("newcenter", newCenter)
     blackNodes = set(G)
     whiteNodes = set()
     whiteNodes.add(newCenter)
@@ -147,7 +146,6 @@ def callKcenters(g):
     for i in range(1, n):
         kCenters, d = findKCentersColors(g, i, shortestPaths, getNodeWithMostNeighbors(g))
         if d == 1:
-            print("findKCentersColors MOST NEIGHBORS")
             return kCenters
 
         # iterations = 10
@@ -172,9 +170,7 @@ def dominant(g):
     if len(currentDominatingColors) < bestLenght:
         bestDominating = currentDominatingColors
         bestLenght = len(bestDominating)
-        # print("choose Colors")
 
-    # print(nx.is_dominating_set(g, bestDominating))
     return bestDominating
 
 
