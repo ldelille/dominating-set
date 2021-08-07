@@ -1,13 +1,6 @@
 import sys, os, time
 import networkx as nx
-import sys, os, time
-import networkx as nx
-from networkx.utils import arbitrary_element
-
-import sys, os, time
-import networkx as nx
 from random import randrange
-import operator
 
 
 def findBestNextColor(g, totalNodes, blackNodes, whiteNodes, currentDominating):
